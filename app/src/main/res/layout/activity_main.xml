@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.MainActivity">
+    <!--android:background="@drawable/bg_image" -->
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        app:titleTextColor="@color/white"
+        />
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        >
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginBottom="60dp"
+                android:layout_marginTop="390dp">
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Running Infor"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
+            </ScrollView>
+
+
+            <!--            <Button-->
+            <!--                android:id="@+id/initButton"-->
+            <!--                android:layout_width="60dp"-->
+            <!--                android:layout_height="44dp"-->
+            <!--                android:layout_marginEnd="8dp"-->
+            <!--                android:layout_marginLeft="8dp"-->
+            <!--                android:layout_marginRight="8dp"-->
+            <!--                android:layout_marginStart="8dp"-->
+            <!--                android:onClick="initClicked"-->
+            <!--                android:text="Init"-->
+            <!--                android:fontFamily="sans-serif"-->
+            <!--                android:layout_gravity="bottom"-->
+            <!--                />-->
+
+            <Button
+                android:id="@+id/initButton"
+                android:layout_width="50dp"
+                android:layout_height="43dp"
+                android:layout_marginLeft="10dp"
+                android:text="Init"
+                android:fontFamily="sans-serif"
+                android:onClick="initClicked"
+                android:layout_gravity="bottom"
+
+                />
+
+
+            <Button
+                android:id="@+id/stopButton"
+                android:layout_width="60dp"
+                android:layout_height="43dp"
+                android:layout_marginLeft="60dp"
+                android:text="Stop"
+                android:fontFamily="sans-serif"
+                android:onClick="stopClicked"
+                android:layout_gravity="bottom"
+
+                />
+
+            <Button
+                android:id="@+id/tunnelButton"
+                android:layout_width="180dp"
+                android:layout_height="43dp"
+                android:layout_marginLeft="120dp"
+                android:onClick="tunnelClicked"
+                android:text="Start Livestream"
+                android:fontFamily="sans-serif"
+                android:layout_gravity="bottom"
+                />
+
+            <Button
+                android:id="@+id/pairButton"
+                android:layout_width="60dp"
+                android:layout_height="43dp"
+                android:layout_marginLeft="300dp"
+                android:onClick="pairClicked"
+                android:text="Pair"
+                android:fontFamily="sans-serif"
+                android:layout_gravity="bottom"
+                />
+
+            <WebView
+                android:id="@+id/webview"
+                android:layout_width="match_parent"
+                android:layout_height="390dp"
+                android:layout_marginTop="0dp"
+                android:background="@color/colorPrimary"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="300dp"
+                android:indeterminate="true"
+                android:visibility="invisible"
+                android:layout_gravity="right"
+                />
+
+        </FrameLayout>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+
+</FrameLayout>

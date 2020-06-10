@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#FF736B</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="buttonColor">#00abdc</color>
+<!--    <color name="white">#ffffff</color>-->
+    <color name="labeTextColor">#ffffff</color>
+
+    <color name="my_blue">#3498DB</color>
+    <color name="my_blue_dark">#2f8cdb</color>
+    <color name="my_green">#77D065</color>
+    <color name="my_purple">#B455B6</color>
+    <color name="my_gray">#738182</color>
+    <color name="my_black">#000022</color>
+    <color name="my_background">#0b1b40fb</color>
+    <color name="colortext">#fafafa</color>
+
+    <color name="light_grey">#cccccc</color>
+    <color name="waveviewtext">#4a148c</color>
+    <color name="waveviewbackground">#00bcd4</color>
+    <color name="background">#fafafa</color>
+    <color name="background1">#01579b</color>
+
+    <color name="white">#ECF0F1</color>
+</resources>

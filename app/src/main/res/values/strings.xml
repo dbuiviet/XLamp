@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">MagicLamp</string>
+
+    <!-- share preference keys -->
+    <string name="common_preference">common_preference</string>
+
+    <!-- general message -->
+    <string name="connect_internet_require_message">Bạn cần kết nối internet để thực hiện chức năng này</string>
+    <string name="connect_internet_alert_message">Bạn vui lòng kiểm tra kết nối Internet</string>
+
+<!--    <string name="app_name">Nabto Audio Demo</string>-->
+    <string name="device_id">Device ID</string>
+    <string name="open_stream">Open Audio Stream</string>
+    <string name="close_stream">Close Audio Stream</string>
+
+
+    <string name="Raw_data"> <u>Raw Data</u></string>
+    <string name="filter_name">Eg: My Smart Watch</string>
+    <string name="share_icon">&#xE80D;</string>
+    <string name="receive_format">Receive Format</string>
+    <string name="string">String</string>
+    <string name="byte_array">Byte Array</string>
+    <string name="transmit_format">Transmit Format</string>
+    <string name="filter_menu">Filter</string>
+    <string name="share_log_file_menu">Share log file</string>
+    <string name="communicate_menu">Communicate</string>
+    <string name="share_app_menu">Share</string>
+    <string name="rate_app_menu">Rate</string>
+    <string name="feedback_menu">Feedback</string>
+
+    <string name="connected">Status: Connected</string>
+    <string name="disconnected">Status: Disconnected</string>
+    <string name="connecting">Status: Connecting</string>
+    <string name="Rssi_db">RSSI: ___db</string>
+    <string name="icon_notify">&#xf075;</string>
+    <string name="icon_read">&#xf15c;</string>
+    <string name="icon_write">&#xf1d8;</string>
+</resources>
