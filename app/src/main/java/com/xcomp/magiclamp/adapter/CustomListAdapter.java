@@ -23,7 +23,7 @@ public class CustomListAdapter extends BaseAdapter /*extends ArrayAdapter<String
     private customButtonListener customListner;
 
     public interface customButtonListener {
-        public void onButtonClickListner(int position, String name, String mac, int rssi);
+        public void onButtonClickListener(int position, String name, String mac, int rssi);
 
         public void onRawDataClickListner(int position, String raw_data);
     }

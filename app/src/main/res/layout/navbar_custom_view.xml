@@ -34,6 +34,7 @@
             android:layout_gravity="center"
             android:textColor="@color/white"
             android:textStyle="bold"
+            android:enabled="false"
             android:background="@drawable/button_background_red_dark_border"
             android:text="Tắt"
             />
@@ -47,6 +48,7 @@
             android:layout_gravity="center"
             android:textColor="@color/white"
             android:textStyle="bold"
+            android:enabled="true"
             android:background="@drawable/button_background_blue_dark_border"
             android:text="Bật"
             />

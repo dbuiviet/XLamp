@@ -20,6 +20,8 @@
         android:maxLines="1"
         android:text="" />
 
+
+
     <Button
         android:id="@+id/buttonOpenStream"
         android:layout_width="match_parent"
@@ -35,5 +37,44 @@
         android:enabled="false"
         android:text="@string/close_stream"
         android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/buttonScanDevice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:enabled="true"
+        android:text="@string/scan_device"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/buttonToggleOnOff"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:enabled="true"
+        android:text="@string/toogle_onoff"
+        android:textStyle="bold" />
+
+
+<!--    <ListView-->
+<!--        android:id="@+id/devicelist"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:divider="@null"-->
+<!--        android:layout_alignParentTop="true"-->
+<!--        android:layout_alignParentStart="true"-->
+<!--        />-->
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Scanned Devices"
+            />
+    </ScrollView>
+
 
 </LinearLayout>

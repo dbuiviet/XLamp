@@ -51,7 +51,11 @@ public class MainActivity extends BaseActivity {
 
     public String mqttTopic = "/magiclamp/qos0";
 
-    public static final String EXTRAS_DEVICE_ID = "DEVICE_ID";
+    //public static final String EXTRAS_DEVICE_ID = "DEVICE_ID";
+
+    private boolean MQTT_Enable = false; //using MQTT to turn On/Off
+
+    private boolean Nabto_OnOff = false;  //using Nabto session to turn On/Off
 
     private WebView webView;
 
@@ -60,6 +64,8 @@ public class MainActivity extends BaseActivity {
     String deviceID = "";
 
     Collection<String> deviceNames;
+
+    View navbar_custom_view;
 
     //GridViewAdapter_Images gridViewAdapter;
     //RecyclerView gridRecycleView;
@@ -87,66 +93,37 @@ public class MainActivity extends BaseActivity {
 //        actionbar.setHomeAsUpIndicator(R.drawable.ico_menu);
 
         LayoutInflater inflator = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View navbar_custom_view = inflator.inflate(R.layout.navbar_custom_view, null);
+        navbar_custom_view = inflator.inflate(R.layout.navbar_custom_view, null);
         ActionBar.LayoutParams layout = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT);
         actionbar.setCustomView(navbar_custom_view);
         setupNavbarActions(navbar_custom_view);
 
 
-        //gridRecycleView = (RecyclerView) findViewById(R.id.images_gridview);
-//        gridViewAdapter = new GridViewAdapter_Images(this);
-//        RecyclerView.LayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
-//        gridRecycleView.setLayoutManager(gridLayoutManager);
-//        ((GridLayoutManager) gridLayoutManager).setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-//            @Override
-//            public int getSpanSize(int position) {
-//                int spanType = (gridViewAdapter.getItemViewType(position) == GridViewAdapter_Images.ITEM_VIEW_TYPE_SESSION) ? 2 : 1;
-//                Log.e(TAG, "getSpanSize for position: " + position + " span type: " + spanType);
-//                return spanType;
-//            }
-//        });
+        if (MQTT_Enable){
+            mqttHelper = new MqttHelper(this, mqttTopic, new MqttCallbackExtended() {
+                @Override
+                public void connectComplete(boolean reconnect, String serverURI) {
 
-//        gridRecycleView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(2), true));
-////        gridRecycleView.addItemDecoration(new MarginDecoration(this));
-//        gridRecycleView.setItemAnimator(new DefaultItemAnimator());
-//        gridRecycleView.setAdapter(gridViewAdapter);
+                }
 
-        //this.rootViewToShowLoadingIndicator = (ViewGroup)findViewById(R.id.content_frame);
-//        ActionBar actionbar = getSupportActionBar();
-//        LayoutInflater inflator = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//        View v = inflator.inflate(R.layout.navbar_custom_view, null);
-//        actionbar.setDisplayShowTitleEnabled(true);
-//        actionbar.setDisplayShowCustomEnabled(true);
-//        ActionBar.LayoutParams layout = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT);
-//        actionbar.setCustomView(v);
+                @Override
+                public void connectionLost(Throwable cause) {
 
-//        this.mSwipeRefreshLayout = this.findViewById(R.id.swipeRefresh);
-//        setupRefreshWhenSwipe();
+                }
 
-//        getAllImageModel();
-//        getAllSession();
-        mqttHelper = new MqttHelper(this, "haveNewPage", new MqttCallbackExtended() {
-            @Override
-            public void connectComplete(boolean reconnect, String serverURI) {
+                @Override
+                public void messageArrived(String topic, MqttMessage message) throws Exception {
+                    Log.e(TAG, "messageArrived on topic: " + topic + " --- message: " + message);
+                    //MainActivity.this.getAllSession();
+                }
 
-            }
+                @Override
+                public void deliveryComplete(IMqttDeliveryToken token) {
 
-            @Override
-            public void connectionLost(Throwable cause) {
+                }
+            });
+        }
 
-            }
-
-            @Override
-            public void messageArrived(String topic, MqttMessage message) throws Exception {
-                Log.e(TAG, "messageArrived on topic: " + topic + " --- message: " + message);
-                //MainActivity.this.getAllSession();
-            }
-
-            @Override
-            public void deliveryComplete(IMqttDeliveryToken token) {
-
-            }
-        });
 
         SharedPreferences preferences = this.getSharedPreferences("paired_devices", Context.MODE_PRIVATE);
         deviceID = preferences.getString("deviceID", "");
@@ -178,51 +155,6 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    /**
-     * RecyclerView item decoration - give equal margin around grid item
-     */
-    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
-
-        private int spanCount;
-        private int spacing;
-        private boolean includeEdge;
-
-        public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
-            this.spanCount = spanCount;
-            this.spacing = spacing;
-            this.includeEdge = includeEdge;
-        }
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            int position = parent.getChildAdapterPosition(view); // item position
-            int column = position % spanCount; // item column
-
-            if (includeEdge) {
-                outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
-                outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
-
-                if (position < spanCount) { // top edge
-                    outRect.top = spacing;
-                }
-                outRect.bottom = spacing; // item bottom
-            } else {
-                outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
-                outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
-                if (position >= spanCount) {
-                    outRect.top = spacing; // item top
-                }
-            }
-        }
-    }
-
-    /**
-     * Converting dp to pixel
-     */
-    private int dpToPx(int dp) {
-        Resources r = getResources();
-        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
-    }
 
     @Override
     protected void onResume() {
@@ -253,217 +185,163 @@ public class MainActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-//    private void setupRefreshWhenSwipe() {
-//
-//        this.mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                MainActivity.this.mSwipeRefreshLayout.setRefreshing(false);
-//                if (!Utils.hasInternetConnection(MainActivity.this)) {
-//                    Toast.makeText(MainActivity.this, MainActivity.this.getResources().getString(R.string.connect_internet_require_message), Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
-//                MainActivity.this.showLoadingIndicator("");
-//                MainActivity.this.getAllSession();
-//            }
-//        });
-//    }
 
-//    public void getAllImageModel() {
-//
-//        if(!Utils.hasInternetConnection(MainActivity.this)) {
-//            Toast.makeText(MainActivity.this, MainActivity.this.getResources().getString(R.string.connect_internet_alert_message), Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//
-//        this.showLoadingIndicator("");
-//        RequestQueue queue = VolleyRequest.getInstance(MainActivity.this).getRequestQueue();
-//
-//        // Request a string response from the provided URL.
-//        StringRequest stringRequest = new StringRequest(Request.Method.GET, WebserviceInfors.base_host_service + WebserviceInfors.get_all_image_model,
-//                new Response.Listener<String>() {
-//                    @Override
-//                    public void onResponse(String response) {
-//                        Log.e(TAG, response);
-//                        MainActivity.this.hideLoadingIndicator();
-//
-//                        final ArrayList<ImageModel> questionList = new ArrayList<>() ;
-//
-//                        try {
-//                            JSONObject jsResponse = new JSONObject(response);
-//                            if (jsResponse.getInt("code") == 200) {
-//                                questionList.clear();
-//                                JSONArray jsonArray = jsResponse.getJSONArray("content");
-//                                Log.e(TAG, "onErrorResponse: " + jsonArray);
-//
-//                                if (jsonArray != null) {
-//                                    if(jsonArray.length() > 0) {
-//                                        for (int i=0; i < jsonArray.length(); i++ ){
-//                                            JSONObject jsonObject = jsonArray.getJSONObject(i);
-//                                            ImageModel question = ImageModel.createImageModelFromJsonObject(jsonObject);
-//                                            questionList.add(question);
-//                                        }
-//                                    }
-//                                }
-//                                MainActivity.this.gridViewAdapter.setImageModelList(questionList);
-//                            }
-//                            else {
-////                                Toast.makeText(MainActivity.this,jsResponse.getString("content"), Toast.LENGTH_SHORT).show();
-//                            }
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                },
-//                new Response.ErrorListener() {
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//                        MainActivity.this.hideLoadingIndicator();
-//                        Log.e(TAG, "onErrorResponse: " + error.toString());
-////                        Toast.makeText(MainActivity.this, error.toString(), Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//        );
-////        {
-////            @Override
-////            protected Map<String, String> getParams() throws AuthFailureError {
-////                Map<String, String> params = new HashMap<String, String>();
-////
-////                params.put("status", Integer.toString(currentSelectedStatus));
-////                params.put("key", category);
-////                params.put("offer_id", user_id);
-////                params.put("order", Integer.toString(order));
-////                return params;
-////            }
-//
-////            @Override
-////            public Map<String, String> getHeaders() throws AuthFailureError {
-////                Map<String, String>  params = new HashMap<>();
-////                SharedPreferences sharedPreferences = Utils.getCommonSharepreference(MainActivity.this);
-////                params.put("x-access-token", sharedPreferences.getString(getResources().getString(R.string.login_token),""));
-////                return params;
-////            }
-//
-////        };
-//        queue.getCache().clear();
-//        queue.add(stringRequest);
-//    }
 
-//    public void getAllSession() {
-//
-//        if(!Utils.hasInternetConnection(MainActivity.this)) {
-//            Toast.makeText(MainActivity.this, MainActivity.this.getResources().getString(R.string.connect_internet_alert_message), Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//
-//        this.showLoadingIndicator("");
-//        RequestQueue queue = VolleyRequest.getInstance(MainActivity.this).getRequestQueue();
-//
-//        // Request a string response from the provided URL.
-//        StringRequest stringRequest = new StringRequest(Request.Method.GET, WebserviceInfors.base_host_service + WebserviceInfors.get_all_session,
-//                new Response.Listener<String>() {
-//                    @Override
-//                    public void onResponse(String response) {
-//                        Log.e(TAG, response);
-//                        MainActivity.this.hideLoadingIndicator();
-//
-//                        final ArrayList<SessionModel> sessionList = new ArrayList<>() ;
-//
-//                        try {
-//                            JSONObject jsResponse = new JSONObject(response);
-//                            if (jsResponse.getInt("code") == 200) {
-//                                sessionList.clear();
-//                                JSONArray jsonArray = jsResponse.getJSONArray("content");
-//                                Log.e(TAG, "onErrorResponse: " + jsonArray);
-//
-//                                if (jsonArray != null) {
-//                                    if(jsonArray.length() > 0) {
-//                                        for (int i=0; i < jsonArray.length(); i++ ){
-//                                            JSONObject jsonObject = jsonArray.getJSONObject(i);
-//                                            SessionModel sessionModel = SessionModel.createImageModelFromJsonObject(jsonObject);
-//                                            sessionList.add(sessionModel);
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                            else {
-////                                Toast.makeText(MainActivity.this,jsResponse.getString("content"), Toast.LENGTH_SHORT).show();
-//                            }
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                        MainActivity.this.gridViewAdapter.setSessionModelList(sessionList);
-//                    }
-//                },
-//                new Response.ErrorListener() {
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//                        MainActivity.this.hideLoadingIndicator();
-//                        Log.e(TAG, "onErrorResponse: " + error.toString());
-////                        Toast.makeText(MainActivity.this, error.toString(), Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//        );
-////        {
-////            @Override
-////            protected Map<String, String> getParams() throws AuthFailureError {
-////                Map<String, String> params = new HashMap<String, String>();
-////
-////                params.put("status", Integer.toString(currentSelectedStatus));
-////                params.put("key", category);
-////                params.put("offer_id", user_id);
-////                params.put("order", Integer.toString(order));
-////                return params;
-////            }
-//
-////            @Override
-////            public Map<String, String> getHeaders() throws AuthFailureError {
-////                Map<String, String>  params = new HashMap<>();
-////                SharedPreferences sharedPreferences = Utils.getCommonSharepreference(MainActivity.this);
-////                params.put("x-access-token", sharedPreferences.getString(getResources().getString(R.string.login_token),""));
-////                return params;
-////            }
-//
-////        };
-//        queue.getCache().clear();
-//        queue.add(stringRequest);
-//
-//    }
+
+    static final String TOGGLE_XML =
+            "<unabto_queries>" +
+                    "<query name='toggle_on_off.json' id='20010'>" + //id does matter!
+                    "<request>" +
+                    "<parameter name='activated' type='uint8' />" +
+                    "</request>" +
+                    "<response format='json'>" +
+//                    "<parameter name='status' type='uint8'/>" +
+//                    "<parameter name='fingerprint' type='raw' representation='hex'/>" +
+//                    "<parameter name='name' type='raw'/>" +
+//                    "<parameter name='permissions' type='uint32'/>" +
+                    "<parameter name='activated' type='uint8' />" +
+                    "</response>" +
+                    "</query>" +
+                    "</unabto_queries>";
 
     public void onTurnOnButtonClicked(View v) {
-        String msg = "on";
-        byte[] encodedPayload = new byte[0];
-        try {
-            encodedPayload = msg.getBytes("UTF-8");
-            MqttMessage message = new MqttMessage(encodedPayload);
-            message.setId(5866);
-            message.setRetained(true);
-            message.setQos(0);
-            //mqttHelper.mqttAndroidClient.publish(mqttTopic,message);
-            mqttHelper.mqttAndroidClient.publish("/magiclamp/qos0", message);
+        if (MQTT_Enable){
+            String msg = "on";
+            byte[] encodedPayload = new byte[0];
+            try {
+                encodedPayload = msg.getBytes("UTF-8");
+                MqttMessage message = new MqttMessage(encodedPayload);
+                message.setId(5866);
+                message.setRetained(true);
+                message.setQos(0);
+                //mqttHelper.mqttAndroidClient.publish(mqttTopic,message);
+                mqttHelper.mqttAndroidClient.publish("/magiclamp/qos0", message);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+                return;
+            }
         }
-        catch (Exception e) {
-            e.printStackTrace();
-            return;
+        else if (Nabto_OnOff){
+//            api = new NabtoApi(new NabtoAndroidAssetManager(this));
+//
+//            status = api.startup();
+//            if (status != NabtoStatus.OK) {
+//                throw new RuntimeException("Nabto startup failed with status " + status);
+//            }
+//
+//            status = api.createSelfSignedProfile(certUser, certPassword);
+//            if (status != NabtoStatus.OK) {
+//                throw new RuntimeException("Nabto createSelfSignedProfile failed with status " + status);
+//            }
+
+//            session = api.openSession(certUser, certPassword);
+//            if (session.getStatus() != NabtoStatus.OK) {
+//                throw new RuntimeException("Nabto open session failed with status " + session.getStatus());
+//            }
+
+            initNabto();
+
+            RpcResult result = api.rpcSetDefaultInterface(TOGGLE_XML, session);
+//            RpcResult result = api.rpcSetInterface(tunnelHost, TOGGLE_XML, session);
+
+            rpcUrl = "nabto://" + tunnelHost + "/toggle_on_off.json?activated=" + LAMP_ON;
+
+            if (result.getStatus() == NabtoStatus.OK) {
+                appendText("Invoking RPC URL ...");
+
+                new RpcTask().execute();
+            } else {
+                if (result.getStatus() == NabtoStatus.FAILED_WITH_JSON_MESSAGE) {
+                    appendText("Nabto set RPC default interface failed: " + result.getJson());
+
+                } else {
+                    appendText("Nabto set RPC default interface failed with status " + result.getStatus());
+                }
+                //initNabto();
+            }
+
+            navbar_custom_view.findViewById(R.id.bt_turnon).setEnabled(false);
+            navbar_custom_view.findViewById(R.id.bt_turnoff).setEnabled(true);
+
         }
+
     }
 
     public void onTurnOffButtonClicked(View v) {
-        String msg = "off";
-        byte[] encodedPayload = new byte[0];
-        try {
-            encodedPayload = msg.getBytes("UTF-8");
-            MqttMessage message = new MqttMessage(encodedPayload);
-            message.setId(5866);
-            message.setRetained(true);
-            message.setQos(0);
-            //mqttHelper.mqttAndroidClient.publish(mqttTopic,message);
-            mqttHelper.mqttAndroidClient.publish("/magiclamp/qos0", message);
+        if (MQTT_Enable){
+            String msg = "off";
+            byte[] encodedPayload = new byte[0];
+            try {
+                encodedPayload = msg.getBytes("UTF-8");
+                MqttMessage message = new MqttMessage(encodedPayload);
+                message.setId(5866);
+                message.setRetained(true);
+                message.setQos(0);
+                //mqttHelper.mqttAndroidClient.publish(mqttTopic,message);
+                mqttHelper.mqttAndroidClient.publish("/magiclamp/qos0", message);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+                return;
+            }
         }
-        catch (Exception e) {
-            e.printStackTrace();
-            return;
+        else if (Nabto_OnOff){
+//            api = new NabtoApi(new NabtoAndroidAssetManager(this));
+//
+//            status = api.startup();
+//            if (status != NabtoStatus.OK) {
+//                throw new RuntimeException("Nabto startup failed with status " + status);
+//            }
+//
+//            status = api.createSelfSignedProfile(certUser, certPassword);
+//            if (status != NabtoStatus.OK) {
+//                throw new RuntimeException("Nabto createSelfSignedProfile failed with status " + status);
+//            }
+
+//            session = api.openSession(certUser, certPassword);
+//            if (session.getStatus() != NabtoStatus.OK) {
+//                throw new RuntimeException("Nabto open session failed with status " + session.getStatus());
+//            }
+
+            RpcResult result = api.rpcSetDefaultInterface(TOGGLE_XML, session);
+//            RpcResult result = api.rpcSetInterface(tunnelHost, TOGGLE_XML, session);
+
+            rpcUrl = "nabto://" + tunnelHost + "/toggle_on_off.json?activated=" + LAMP_OFF;
+
+            if (result.getStatus() == NabtoStatus.OK) {
+                appendText("Invoking RPC URL ...");
+
+                new RpcTask().execute();
+            } else {
+                if (result.getStatus() == NabtoStatus.FAILED_WITH_JSON_MESSAGE) {
+                    appendText("Nabto set RPC default interface failed: " + result.getJson());
+
+                } else {
+                    appendText("Nabto set RPC default interface failed with status " + result.getStatus());
+                }
+                //initNabto();
+            }
+
+            closeNabto();
+
+            navbar_custom_view.findViewById(R.id.bt_turnon).setEnabled(true);
+            navbar_custom_view.findViewById(R.id.bt_turnoff).setEnabled(false);
         }
+    }
+
+    private void closeNabto(){
+        status = api.tunnelClose(tunnel);
+        if (status != NabtoStatus.OK){
+            appendText("Close tunnel returned " + status);
+        }
+
+        status = api.closeSession(session);
+        if (status != NabtoStatus.OK){
+            appendText("Close session returned " + status);
+        }
+
+        api.shutdown();
     }
 
     public void onMenuButtonClicked(View v) {
@@ -475,12 +353,15 @@ public class MainActivity extends BaseActivity {
 
 
     /*Nabto Video Stream Impl*/
-
+    private int LAMP_ON = 1;
+    private int LAMP_OFF = 0;
     private NabtoApi api;
     private Session session;
+    private NabtoStatus status;
+    private Tunnel tunnel;
     static final private String certUser = "XLamp";
     static final private String certPassword = "123456";
-    private String tunnelHost = "";
+    private String tunnelHost = "bozgdcjz.dyfagy.trial.nabto.net";
     private String rpcUrl = ""; //"nabto://" + tunnelHost + "/pair_with_device.json?name=" + certUser;
 
     static final String INTERFACE_XML =
@@ -511,7 +392,7 @@ public class MainActivity extends BaseActivity {
 
         ((TextView) findViewById(R.id.textView)).setText("");
 
-        NabtoStatus status = api.startup();
+        status = api.startup();
         if (status != NabtoStatus.OK) {
             throw new RuntimeException("Nabto startup failed with status " + status);
         }
@@ -529,19 +410,22 @@ public class MainActivity extends BaseActivity {
 
         appendText("Nabto client SDK successfully initialized, version " + api.versionString());
 
-        if (deviceID == ""){
-            deviceNames = api.getLocalDevices();
-
-            Log.e(TAG, "init: deviceID: " + deviceNames.toString());
-
-            if (deviceNames.size() > 0){
-                deviceID = deviceNames.iterator().next();
-            }
-        }
+//        if (deviceID == ""){
+//            deviceNames = api.getLocalDevices();
+//
+//            Log.e(TAG, "init: deviceID: " + deviceNames.toString());
+//
+//            if (deviceNames.size() > 0){
+//                deviceID = deviceNames.iterator().next();
+//            }
+//        }
 
         //deviceID = ((ArrayList<String>)deviceNames).get(0);
 
-        tunnelHost = this.deviceID;
+        //tunnelHost = this.deviceID;
+
+        deviceID = tunnelHost;
+
         rpcUrl = "nabto://" + tunnelHost + "/pair_with_device.json?name=" + certUser;
 
     }
@@ -559,28 +443,40 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    NabtoStatus status;
+    //NabtoStatus status;
     private void stop() {
-        status = api.closeSession(session);
-        appendText("Close session returned " + status);
+//        status = api.tunnelClose(tunnel);
+//        if (status != NabtoStatus.OK){
+//            appendText("Close tunnel returned " + status);
+//        }
+//
+//        status = api.closeSession(session);
+//        if (status != NabtoStatus.OK){
+//            appendText("Close session returned " + status);
+//        }
+//
+//        api.shutdown();
+
+        closeNabto();
+
         webView.stopLoading();
     }
 
-    public void tunnelClicked(View view) {
+    public void livestreamClicked(View view) {
         Toast.makeText(this, deviceID, Toast.LENGTH_SHORT).show();
 
-        if (status == NabtoStatus.API_NOT_INITIALIZED || status == NabtoStatus.INVALID_SESSION || this.api == null){
-            initNabto();
-        }
+//        if (status == NabtoStatus.API_NOT_INITIALIZED || status == NabtoStatus.INVALID_SESSION || this.api == null){
+//            initNabto();
+//        }
 
         if (this.api != null) {
-            demoTunnel();
+            livestreamTunnel();
         } else {
             appendText("Not initialized yet!");
         }
     }
 
-    private void demoTunnel() {
+    private void livestreamTunnel() {
         appendText("Opening tunnel ...");
         startProgress();
         new TunnelTask().execute();
@@ -633,10 +529,14 @@ public class MainActivity extends BaseActivity {
         @Override
         protected TunnelInfoResult doInBackground(Void... voids) {
             Log.e("TunnelInfoResult", "doInBackground: ");
-// Tunnel tunnel = api.tunnelOpenTcp(8080, tunnelHost, "localhost", 80, session);
-// Tunnel tunnel = api.tunnelOpenTcp(80, tunnelHost, "118.71.137.119", 8081, session);
-            Tunnel tunnel = api.tunnelOpenTcp(0, tunnelHost, "localhost", 8081, session);
-            return api.tunnelWait(tunnel, 100, 3000);
+
+            tunnel = api.tunnelOpenTcp(0, tunnelHost, "127.0.0.1", 8081, session);
+//            tunnel = api.tunnelOpenTcp(0, tunnelHost, "127.0.0.1", 8081, session);
+//            tunnel = api.tunnelOpenTcp(80, tunnelHost, "localhost", 8081, session);
+
+//            return api.tunnelWait(tunnel, 100, 3000);
+            return api.tunnelWait(tunnel, 300, 5000);
+
         }
     }
 
@@ -644,13 +544,13 @@ public class MainActivity extends BaseActivity {
         Toast.makeText(this, deviceID, Toast.LENGTH_SHORT).show();
 
         if (this.api != null) {
-            demoRpc();
+            pairRpc();
         } else {
             appendText("Not initialized yet!");
         }
     }
 
-    private void demoRpc() {
+    private void pairRpc() {
 
         RpcResult result = api.rpcSetDefaultInterface(INTERFACE_XML, session);
 
@@ -669,15 +569,13 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-
-
     private class RpcTask extends AsyncTask<Void, Void, RpcResult> {
 
         protected void onPostExecute(RpcResult result) {
 
             SharedPreferences.Editor preference = MainActivity.this.getSharedPreferences("paired_devices", Context.MODE_PRIVATE).edit();
             preference.putString("deviceID", MainActivity.this.deviceID);
-            preference.commit();
+            preference.apply();
 
             stopProgress();
             if (result.getStatus() == NabtoStatus.OK) {

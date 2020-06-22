@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:orientation="vertical"
     tools:openDrawer="start">
 
     <ListView
@@ -16,4 +17,15 @@
         android:layout_alignParentStart="true"
         />
 
-</LinearLayout>
+<!--    <Button-->
+<!--        android:id="@+id/buttonSkipScan"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="50dp"-->
+<!--        android:layout_gravity="bottom"-->
+<!--        android:layout_marginBottom="10dp"-->
+<!--        android:enabled="true"-->
+<!--        android:text="@string/skip_scan"-->
+<!--        android:onClick="onSkipScanClicked"-->
+<!--        android:textStyle="bold" />-->
+
+</FrameLayout>

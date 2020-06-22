@@ -90,7 +90,7 @@
                 android:layout_width="180dp"
                 android:layout_height="43dp"
                 android:layout_marginLeft="120dp"
-                android:onClick="tunnelClicked"
+                android:onClick="livestreamClicked"
                 android:text="Start Livestream"
                 android:fontFamily="sans-serif"
                 android:layout_gravity="bottom"

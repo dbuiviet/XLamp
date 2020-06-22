@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Gradle: me.itangqi.waveloadingview:library:0.3.2@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b55e8ea36303f00aa0b846f120f9e173/jetified-library-0.3.2/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b55e8ea36303f00aa0b846f120f9e173/jetified-library-0.3.2/res" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/me.itangqi.waveloadingview/library/0.3.2/ff3aa7c738a22d91c4ae0fc228b04ef6a21e76bd/library-0.3.2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/me.itangqi.waveloadingview/library/0.3.2/66a1c9408f090a70d8640961c465ff431929be7c/library-0.3.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

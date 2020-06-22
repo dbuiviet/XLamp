@@ -25,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -41,6 +42,7 @@ import java.util.TimerTask;
 
 public class BleActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CustomListAdapter.customButtonListener {
     ListView devicelist;
+    //private Button skipScanButton;
 
     private static final int REQUEST_ENABLE_BT = 1;
     private static final int REQUEST_ALL = 4;
@@ -88,6 +90,14 @@ public class BleActivity extends AppCompatActivity implements NavigationView.OnN
         mHandler = new Handler();
         //getSupportActionBar().setDisplayShowHomeEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
+//        skipScanButton = (Button) findViewById(R.id.buttonSkipScan);
+//        skipScanButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                onSkipScanClicked(v);
+//            }
+//        });
 
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             Toast.makeText(this, "BLE not supported", Toast.LENGTH_SHORT).show();
@@ -383,21 +393,21 @@ public class BleActivity extends AppCompatActivity implements NavigationView.OnN
     }
 
     @Override
-    public void onButtonClickListner(int position, String name, String mac, int rssi) {
+    public void onButtonClickListener(int position, String name, String mac, int rssi) {
 //        final Intent intent = new Intent(getBaseContext(), ChatActivity.class);
 //        intent.putExtra(ChatActivity.EXTRAS_DEVICE_NAME, name);
 //        intent.putExtra(ChatActivity.EXTRAS_DEVICE_ADDRESS, mac);
 
-        final Intent intent = new Intent(getBaseContext(), SettingActivity.class);
-        intent.putExtra(SettingActivity.EXTRAS_DEVICE_NAME, name);
-        intent.putExtra(SettingActivity.EXTRAS_DEVICE_ADDRESS, mac);
-
+//        final Intent intent = new Intent(getBaseContext(), SettingActivity.class);
+//        intent.putExtra(SettingActivity.EXTRAS_DEVICE_NAME, name);
+//        intent.putExtra(SettingActivity.EXTRAS_DEVICE_ADDRESS, mac);
+//
         if (mScanning) {
             mBluetoothAdapter.stopLeScan(mLeScanCallback);
 
             mScanning = false;
         }
-        startActivity(intent);
+//        startActivity(intent);
     }
 
     @Override
@@ -424,5 +434,11 @@ public class BleActivity extends AppCompatActivity implements NavigationView.OnN
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         return false;
     }
+
+//    private void onSkipScanClicked(View v){
+//        Intent intent = new Intent(this, SettingActivity.class);
+//        startActivity(intent);
+//        finish();
+//    }
 
 }
